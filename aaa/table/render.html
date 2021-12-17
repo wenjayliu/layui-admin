@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <script>
+function GETfreightPirce(kg, country) {
+        var table = layui.table;
+        let data = {
+            weight: kg,
+            country_code: country
+        }
+        //执行渲染
+        table.render({
+            elem: '#freightPirceTable',
+            url: '/tool/price/calc_shipping_price_batch_ajax', //数据接口
+            method: 'get',
+            where: data,
+            width: 840,
+            height: 215,
+            text: {
+                none: '当前条件下，没有找到数据哦' //默认：无数据。
+            },
+            parseData: function(res){ //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": 9999, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            cols: [[
+                { field: 'name',title: '渠道名称', width: 400 },
+                // {field: 'name',title: '包邮价格'}
+                {
+                    field: 'package_fee',
+                    title: '包邮物流成本',
+                    width: 200, 
+                    templet: function (d) {
+                        const fee  = d.package_fee
+                        return `
+                            ${fee.price_cny} <span class="unit">CNY</span> / 
+                            ${fee.price} <span class="unit">${fee.unit}</span>
+                        `;
+                    }
+                },
+                {
+                    field: 'un_package_fee',
+                    title: '不包邮物流成本',
+                    width: 200, 
+                    templet: function (d) {
+                        const fee  = d.un_package_fee
+                        return `
+                            ${fee.price_cny} <span class="unit">CNY</span> / 
+                            ${fee.price} <span class="unit">${fee.unit}</span>
+                        `;
+                    }
+                }
+            ]] //设置表头
+        });
+        
+    }
+    </script>
+</body>
+</html>

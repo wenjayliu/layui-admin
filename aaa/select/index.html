@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+                // 根据站点(国家)获取模板列表
+        function getTpmLsit(coutry_code) {
+            $.ajax({
+                url: '/tool/price/list_ajax',
+                dataType: 'json',
+                data: {country_code: coutry_code},
+                type: 'get',
+                async: true,
+                success: function (res) {
+                    if (res.code == 0) {
+                        console.log('res', res.data)
+                        if (res.data.length !== 0) {
+                            let str = '<option value="">请选择一个模板</option>'
+                            for (let index = 0; index < res.data.length; index++) {
+                                str += '<option value="'+ res.data[index].id +'">'+ res.data[index].temp_name +'</option>'
+                            }
+                            $('#tpmselect').empty()
+                            $('#tpmselect').append(str)
+                            form.render('select')
+                        } else {
+                            $('#tpmselect').empty()
+                            form.render('select')
+                        }
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+</html>
